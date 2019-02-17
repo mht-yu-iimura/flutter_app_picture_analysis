@@ -19,9 +19,6 @@ Future<Null> main() async {
   runApp(MyApp());
 }
 
-//void main() => runApp(MyApp());
-
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -85,6 +82,18 @@ class CameraWidgetState extends State<CameraWidget> {
                 // カメラ撮影ボタン
                 icon: const Icon(Icons.camera_alt),
                 onPressed: cameraController != null && cameraController.value.isInitialized ? onTakePictureButtonPressed : null,
+              ),
+              IconButton(
+                // 次の画面へ
+                  icon: const Icon(Icons.arrow_forward),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => PhotoCardList(),
+                      ),
+                    );
+                  }
               ),
             ],
           ),
