@@ -16,7 +16,9 @@ class PhotoCardList extends StatefulWidget {
 class PhotoCardListState extends State<PhotoCardList> {
 
   // 保存されてるファイル情報を取得する
-  List<String> imageFileList = [];
+  List<String> imageFileNameList = [];
+  List<String> imageFilePathList = [];
+  List<File> imageFileList = [];
 
   @override
   void initState() {
@@ -29,19 +31,49 @@ class PhotoCardListState extends State<PhotoCardList> {
   Widget build(BuildContext context) {
 
     return new Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+              'saved images list',
+          ),
+        ),
+
       body:
 
       ListView.builder(
-          itemCount: imageFileList.length,
-
+          itemCount: imageFileNameList.length,
           itemBuilder: (context, int index) {
+            return new GestureDetector(
+              // tap event
+              onTap: () => print(imageFileNameList[index]),
 
-            return Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                imageFileList[index],
-              )
+              child: new Card(
+                child: new Column(
+                  children: <Widget>[
+
+                    // text area
+                    new Padding(
+                        padding: new EdgeInsets.all(8.0),
+                        child: new Text(imageFileNameList[index]),
+                    ),
+
+                    // image area
+                    new Padding(
+                      padding: new EdgeInsets.only(bottom: 16.0),
+                      child:
+                        new Image.memory(
+                          imageFileList[index].readAsBytesSync(),
+                          width: 200,
+                          height: 100,
+                        ),
+                    ),
+
+                  ],
+                ),
+              ),
+
             );
+
           })
     );
   }
@@ -57,10 +89,21 @@ class PhotoCardListState extends State<PhotoCardList> {
 
     if (imageFiles.isNotEmpty) {
       setState(() {
-
+        // load image file name
         imageFiles.forEach((e) =>
-            imageFileList.add(e.uri.pathSegments.last.split('\.').first)
+            imageFileNameList.add(e.uri.pathSegments.last.split('\.').first)
         );
+
+        // load image file path
+        imageFiles.forEach((e) =>
+            imageFilePathList.add(e.path)
+        );
+
+        // load image file
+        imageFiles.forEach((e) =>
+            imageFileList.add(File(e.path))
+        );
+
       });
     }
 

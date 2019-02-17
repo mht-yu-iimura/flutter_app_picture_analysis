@@ -87,7 +87,7 @@ class CameraWidgetState extends State<CameraWidget> {
                 // 次の画面へ
                   icon: const Icon(Icons.arrow_forward),
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (BuildContext context) => PhotoCardList(),
