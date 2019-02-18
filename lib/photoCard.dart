@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class PhotoCard extends StatefulWidget {
   final File imageFile;
@@ -15,11 +16,12 @@ class PhotoCard extends StatefulWidget {
 
 class PhotoCardState extends State<PhotoCard>{
 
-  static String apiKey = 'AIzaSyBX2KCSpuDiPeJ3vysObUY3F7nBM3v5hiU';
-  static String requestUrl = 'https://vision.googleapis.com/v1/images:annotate?key=' + apiKey;
+  static String exRequestUrl = 'http://tepco-usage-api.appspot.com/latest.json';
+  String capacity;
 
   @override
   void initState() {
+    capacity = '';
     super.initState();
   }
 
@@ -58,34 +60,54 @@ class PhotoCardState extends State<PhotoCard>{
             child: new Icon(Icons.arrow_upward),
 //            onPressed: () => print('push button'),
 
-
+              // api call
               onPressed: () =>
 
-              // api call event
-            http.post(
-              requestUrl,
-              body: {}
-            ).then((response) {
-              print('response');
-            }),
+              http.get(exRequestUrl).then(
+                      (response) {
+                print("${response.statusCode}");
+                print("${response.body}");
+
+                setState(() {
+
+                  if (response.statusCode == 200){
+                    Map<String, dynamic> decode = json.decode(response.body);
+                    capacity = decode['capacity'].toString();
+                    print('response OK');
+
+                  }
+
+                });
+              })
 
         ),
     );
   }
 
   Widget analysisArea() {
-    return Container(
-      margin: EdgeInsets.all(16.0),
-      child: Column(
-        children: <Widget>[
-          new Text('score : 100'),
-          new Text('discription : これはxxです')
-        ],
-      ),
-    );
+
+    if (capacity.length < 1) {
+      return Container(
+        margin: EdgeInsets.all(16.0),
+        child: Column(
+          children: <Widget>[
+            new Text('score : 取得できてません'),
+            new Text('discription : 取得できてません')
+          ],
+        ),
+      );
+    } else {
+      return Container(
+        margin: EdgeInsets.all(16.0),
+        child: Column(
+          children: <Widget>[
+            new Text('score : ${capacity}'),
+            new Text('discription : これはxxです')
+          ],
+        ),
+      );
+    }
   }
-
-
 
 }
 
