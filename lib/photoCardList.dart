@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:path_provider/path_provider.dart';
+import './photoCard.dart';
+
 
 class PhotoCardList extends StatefulWidget {
   PhotoCardList();
@@ -19,6 +21,8 @@ class PhotoCardListState extends State<PhotoCardList> {
   List<String> imageFileNameList = [];
   List<String> imageFilePathList = [];
   List<File> imageFileList = [];
+
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -45,7 +49,17 @@ class PhotoCardListState extends State<PhotoCardList> {
           itemBuilder: (context, int index) {
             return new GestureDetector(
               // tap event
-              onTap: () => print(imageFileNameList[index]),
+//              onTap: () => print(imageFileNameList[index]),
+
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        PhotoCard(scaffoldKey, imageFileList[index]),
+                  ),
+                );
+              },
 
               child: new Card(
                 child: new Column(
